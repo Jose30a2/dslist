@@ -1,6 +1,7 @@
 package com.joseantonio.dslist.services;
 
 import java.util.List;
+import com.joseantonio.dslist.projections.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,16 @@ public class GameService {
 		// TODO tratamento de excepciones en caso de que el id no existiese
 		
 		return new GameDTO(result);
+		
+	}
+	
+	@Transactional(readOnly = true)		//Asegura que la operacion de lectura en la BD sea atomica
+	public List<GameMinDTO> findByList(Long listId){
+		
+		List<GameMinProjection> result = gameRepository.searchByList(listId);
+		
+		
+		return result.stream().map(x -> new GameMinDTO(x)).toList();
 		
 	}
 }
